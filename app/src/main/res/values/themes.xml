@@ -3,6 +3,7 @@
     <style name="Base.Theme.Artimo_emotion_diary" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:fontFamily">@font/im_hyemin_regular</item>
     </style>
 
     <style name="Theme.Artimo_emotion_diary" parent="Base.Theme.Artimo_emotion_diary" />
