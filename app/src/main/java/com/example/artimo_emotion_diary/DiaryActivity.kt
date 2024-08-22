@@ -1,13 +1,17 @@
 package com.example.artimo_emotion_diary
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class DiaryActivity : AppCompatActivity() {
 
@@ -27,46 +31,67 @@ class DiaryActivity : AppCompatActivity() {
         todaycaption = findViewById(R.id.todaycaption)
         tomainbtn = findViewById(R.id.tomainbtn)
 
-        // intent로 받아온거 불러오기
         val year = intent.getIntExtra("YEAR", 0)
         val month = intent.getIntExtra("MONTH", 0)
         val day = intent.getIntExtra("DAY", 0)
-        val emoji = intent.getStringExtra("emoji")
-        val diary = intent.getStringExtra("diary")
-        val caption = intent.getStringExtra("caption")
-        val imageUriString = intent.getStringExtra("imageUri")
+        val emoji = intent.getStringExtra("emoji") ?: ""
+        val caption = intent.getStringExtra("caption") ?: ""
+        val imageUriString = intent.getStringExtra("imageUri") ?: ""
+        val diary = intent.getStringExtra("diary") ?: ""
 
-        // 날짜 설정
+        Log.d("DiaryActivity", "Received - YEAR: $year, MONTH: $month, DAY: $day, emoji: $emoji, caption: $caption, imageUri: $imageUriString, diary: $diary")
+
+        // 안드로이드 버전 로그 추가
+        val androidVersion = Build.VERSION.RELEASE
+        Log.d("DiaryActivity", "Android Version: $androidVersion")
+        Log.d("DiaryActivity", "Received - YEAR: $year, MONTH: $month, DAY: $day, emoji: $emoji, caption: $caption, imageUri: $imageUriString, diary: $diary")
+
+        // 날짜 텍스트뷰에 날짜 정보를 설정
         val date: TextView = findViewById(R.id.date)
         date.text = getString(R.string.date_format_emoji, year, month, day)
 
-        // 이모지 설정
-        if (emoji != null) {
-            try {
-                val inputStream = assets.open(emoji)
-                val drawable = Drawable.createFromStream(inputStream, null)
-                todayemoji.setImageDrawable(drawable)
-                inputStream.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                todayemoji.setImageResource(R.drawable.logo) // Default image in case of error
-            }
-        } else {
-            todayemoji.setImageResource(R.drawable.logo) // Default image if emoji is null
+        // 이모지 로드
+        try {
+            val inputStream = assets.open(emoji)
+            val drawable = Drawable.createFromStream(inputStream, null)
+            todayemoji.setImageDrawable(drawable)
+            inputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            todayemoji.setImageResource(R.drawable.logo)
         }
 
-        // 글이랑 캡션 설정
+        // 일기 내용, 캡션
         todaydiary.text = diary
         todaycaption.text = caption
 
-        // 이미지 등록
-        imageUriString?.let {
-            val imageUri = Uri.parse(it)
-            todayimage.setImageURI(imageUri)
+        // 이미지 URI를 처리하는 코드
+        if (imageUriString.isNotEmpty()) {
+            val imageUri = Uri.parse(imageUriString)
+                try {
+                    val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    contentResolver.takePersistableUriPermission(imageUri, takeFlags)
+
+                    contentResolver.openInputStream(imageUri)?.use { inputStream ->
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        todayimage.setImageBitmap(bitmap)
+                    } ?: run {
+                        Log.e("DiaryActivity", "Input stream for image URI is null")
+                        todayimage.setImageResource(R.drawable.logo)
+                    }
+                } catch (e: SecurityException) {
+                    Log.e("DiaryActivity", "SecurityException: ${e.message}")
+                    todayimage.setImageResource(R.drawable.logo) // 권한 문제 시 기본 이미지
+                } catch (e: Exception) {
+                    Log.e("DiaryActivity", "Error setting image URI: ${e.message}")
+                    todayimage.setImageResource(R.drawable.logo)
+                }
+
+        } else {
+            todayimage.setImageResource(R.drawable.logo) // 이미지가 없을 경우 기본 이미지 사용
         }
 
-        //메인으로 돌아가기
-        tomainbtn.setOnClickListener{
+        tomainbtn.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
