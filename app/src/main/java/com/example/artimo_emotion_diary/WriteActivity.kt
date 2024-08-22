@@ -4,11 +4,18 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.artimo_emotion_diary.roomdb.DiaryDaoDatabase
+import com.example.artimo_emotion_diary.roomdb.DiaryTable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 class WriteActivity : AppCompatActivity() {
@@ -66,6 +73,34 @@ class WriteActivity : AppCompatActivity() {
         writebtn.setOnClickListener{
             val diaryText = diary.text.toString()
             val captionText = caption.text.toString()
+
+            // roomdb에 저장
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val db = DiaryDaoDatabase.getDatabase(applicationContext)
+                    val diaryDAO = db?.diaryDAO()
+
+                    // diaryEntity 생성
+                    val diaryEntity = DiaryTable(
+                        year = year,
+                        month = month,
+                        date = day,
+                        emoji = emoji,
+                        diary = diaryText,
+                        imageUri = imageUri?.toString(),
+                        caption = captionText
+                    )
+                    diaryDAO?.insert(diaryEntity)
+
+                    // 다이어리에 저장이 되면 다이어리의 내용을 전체 출력해서 db 확인
+                    val allDiaries = diaryDAO?.selectALL()
+                    allDiaries?.forEach {
+                        Log.d("DiaryEntry", "Year: ${it.year}, Month: ${it.month}, Day: ${it.date}, Emoji: ${it.emoji}, Diary: ${it.diary}, ImageUri: ${it.imageUri}, Caption: ${it.caption}")
+                    }
+                }
+            }
+
+            // 적은 내용 확인 페이지로 이동
             val intent = Intent(this, DiaryActivity::class.java).apply {
                 putExtra("YEAR", year)
                 putExtra("MONTH", month)
