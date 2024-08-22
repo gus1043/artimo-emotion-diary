@@ -1,8 +1,10 @@
 package com.example.artimo_emotion_diary
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,7 @@ class DiaryActivity : AppCompatActivity() {
     private lateinit var todayemoji: ImageView
     private lateinit var todaydiary: TextView
     private lateinit var todaycaption: TextView
+    private lateinit var tomainbtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +25,7 @@ class DiaryActivity : AppCompatActivity() {
         todayemoji = findViewById(R.id.todayemoji)
         todaydiary = findViewById(R.id.todaydiary)
         todaycaption = findViewById(R.id.todaycaption)
+        tomainbtn = findViewById(R.id.tomainbtn)
 
         // intent로 받아온거 불러오기
         val year = intent.getIntExtra("YEAR", 0)
@@ -59,6 +63,13 @@ class DiaryActivity : AppCompatActivity() {
         imageUriString?.let {
             val imageUri = Uri.parse(it)
             todayimage.setImageURI(imageUri)
+        }
+
+        //메인으로 돌아가기
+        tomainbtn.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

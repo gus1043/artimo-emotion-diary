@@ -94,12 +94,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/writebtn"
+        android:id="@+id/tomainbtn"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text = "@string/writebtn"
+        android:text = "@string/tomainbtn"
         android:background="#00000000"
         android:textColor="#000000"/>
 
