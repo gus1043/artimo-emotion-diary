@@ -1,22 +1,27 @@
 package com.example.artimo_emotion_diary
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.artimo_emotion_diary.roomdb.DiaryDaoDatabase
 import com.example.artimo_emotion_diary.roomdb.DiaryTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 class WriteActivity : AppCompatActivity() {
 
@@ -27,6 +32,25 @@ class WriteActivity : AppCompatActivity() {
     private lateinit var writebtn: Button
 
     private var imageUri: Uri? = null
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // 권한이 허용된 경우 이미지 선택 허용
+                selectImage()
+            } else {
+                Log.e("WriteActivity", "Storage permission denied")
+                // 권한이 거부된 경우
+            }
+        }
+    // 이미지 선택 결과를 처리 ActivityResultLauncher
+    private val selectImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                imageUri = it
+                todayimage.setImageURI(imageUri)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,44 +67,35 @@ class WriteActivity : AppCompatActivity() {
         val day = intent.getIntExtra("DAY", 0)
         val emoji = intent.getStringExtra("emoji") ?: ""
 
-        // 날짜 설정
+        // 날짜, 이모지 설정
         val date: TextView = findViewById(R.id.date)
         date.text = getString(R.string.date_format_emoji, year, month, day)
 
-        if (emoji != null) {
-            try {
-                // assets에서 이미지를 불러옴
-                val inputStream = assets.open(emoji)
-                val drawable = Drawable.createFromStream(inputStream, null)
-                todayemoji.setImageDrawable(drawable)
-                inputStream.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                todayemoji.setImageResource(R.drawable.logo) // 에러 발생 시 기본 이미지 설정
-            }
-        } else {
-            // null인 경우 처리 (기본 이미지 설정)
-            todayemoji.setImageResource(R.drawable.logo)
-        }
+        loadEmoji(emoji)
 
-        // 이미지 선택 버튼 클릭 리스너 설정
+        // 이미지 선택 버튼
         todayimage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 100)
+            // 권한을 요청, 이미지를 선택
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // 안드로이드 13 이상
+                requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+            } else {
+                // 안드로이드 12 이하
+                selectImage()
+            }
         }
 
-        writebtn.setOnClickListener{
+        // 작성 완료 버튼
+        writebtn.setOnClickListener {
             val diaryText = diary.text.toString()
             val captionText = caption.text.toString()
 
-            // roomdb에 저장
+            // db 저장
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     val db = DiaryDaoDatabase.getDatabase(applicationContext)
                     val diaryDAO = db?.diaryDAO()
 
-                    // diaryEntity 생성
                     val diaryEntity = DiaryTable(
                         year = year,
                         month = month,
@@ -92,7 +107,6 @@ class WriteActivity : AppCompatActivity() {
                     )
                     diaryDAO?.insert(diaryEntity)
 
-                    // 다이어리에 저장이 되면 다이어리의 내용을 전체 출력해서 db 확인
                     val allDiaries = diaryDAO?.selectALL()
                     allDiaries?.forEach {
                         Log.d("DiaryEntry", "Year: ${it.year}, Month: ${it.month}, Day: ${it.date}, Emoji: ${it.emoji}, Diary: ${it.diary}, ImageUri: ${it.imageUri}, Caption: ${it.caption}")
@@ -100,13 +114,12 @@ class WriteActivity : AppCompatActivity() {
                 }
             }
 
-            // 적은 내용 확인 페이지로 이동
             val intent = Intent(this, DiaryActivity::class.java).apply {
                 putExtra("YEAR", year)
                 putExtra("MONTH", month)
                 putExtra("DAY", day)
                 putExtra("emoji", emoji)
-                putExtra("imageUri", imageUri.toString())
+                putExtra("imageUri", imageUri?.toString())
                 putExtra("diary", diaryText)
                 putExtra("caption", captionText)
             }
@@ -115,11 +128,19 @@ class WriteActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            imageUri = data.data
-            todayimage.setImageURI(imageUri)
+    private fun loadEmoji(emoji: String) {
+        try {
+            val inputStream = assets.open(emoji)
+            val drawable = Drawable.createFromStream(inputStream, null)
+            todayemoji.setImageDrawable(drawable)
+            inputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            todayemoji.setImageResource(R.drawable.logo)
         }
+    }
+
+    private fun selectImage() {
+        selectImageLauncher.launch("image/*")
     }
 }
