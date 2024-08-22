@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra("DAY", date.date.toInt())
             }
             startActivity(intent)
+            finish()
         }
     })
 

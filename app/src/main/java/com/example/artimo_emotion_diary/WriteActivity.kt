@@ -76,6 +76,7 @@ class WriteActivity : AppCompatActivity() {
                 putExtra("caption", captionText)
             }
             startActivity(intent)
+            finish()
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.artimo_emotion_diary
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.drawable.Drawable
@@ -49,6 +50,10 @@ class EmojiAdapter(
                     putExtra("DAY", day)
                 }
                 context.startActivity(intent)
+                // 현재 Activity 종료
+                if (context is Activity) {
+                    (context as Activity).finish()
+                }
             }
 
         } catch (e: IOException) {
