@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="15dp"
     tools:context=".DiaryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="1"
+        android:layout_marginTop="80dp"
         android:orientation="vertical"
         android:gravity="center">
         <LinearLayout
@@ -24,6 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:padding="10dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:layout_marginRight="10dp"
@@ -33,6 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
+                android:paddingTop="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -50,8 +51,7 @@
                     android:text="@string/emoji_write"
                     android:textColor="#000000"
                     android:fontFamily="@font/im_hyemin_bold"
-                    android:textSize="@dimen/text_size_large"
-                    android:layout_marginBottom="15sp"/>
+                    android:textSize="@dimen/text_size_large"/>
 
             </LinearLayout>
 
@@ -62,7 +62,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="5"
+        android:padding="15dp"
         android:orientation="vertical">
 
         <TextView
@@ -70,8 +71,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:layout_marginBottom="10dp"
-            android:hint="글을 작성해 주세요!"/>
+            android:minLines="4"
+            android:gravity="top"
+            android:textSize="@dimen/text_size_medium"
+            android:scrollbars="vertical"
+            android:maxLines="6"
+            android:layout_marginBottom="5dp"
+            android:hint="다이어리 내용"/>
 
         <ImageView
             android:id="@+id/todayimage"
@@ -79,8 +85,7 @@
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:background="#E0E0E0"/>
-
+            android:background="@drawable/imagebtn"/>
 
         <TextView
             android:id="@+id/todaycaption"
@@ -88,8 +93,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:drawableLeft="@drawable/baseline_arrow_right_24"
-            android:textSize="@dimen/text_size_small"
-            android:hint="캡션을 달고 싶다면 클릭해주세요"/>
+            android:textSize="@dimen/text_size_small"/>
 
     </LinearLayout>
 
