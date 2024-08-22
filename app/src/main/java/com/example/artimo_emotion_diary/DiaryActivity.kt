@@ -65,30 +65,32 @@ class DiaryActivity : AppCompatActivity() {
         todaydiary.text = diary
         todaycaption.text = caption
 
-        // 이미지 URI를 처리하는 코드
+        // 이미지 URI 처리
         if (imageUriString.isNotEmpty()) {
             val imageUri = Uri.parse(imageUriString)
-                try {
-                    val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    contentResolver.takePersistableUriPermission(imageUri, takeFlags)
+            try {
+                // URI 권한을 퍼미션으로 설정
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                contentResolver.takePersistableUriPermission(imageUri, takeFlags)
 
-                    contentResolver.openInputStream(imageUri)?.use { inputStream ->
-                        val bitmap = BitmapFactory.decodeStream(inputStream)
-                        todayimage.setImageBitmap(bitmap)
-                    } ?: run {
-                        Log.e("DiaryActivity", "Input stream for image URI is null")
-                        todayimage.setImageResource(R.drawable.logo)
-                    }
-                } catch (e: SecurityException) {
-                    Log.e("DiaryActivity", "SecurityException: ${e.message}")
-                    todayimage.setImageResource(R.drawable.logo) // 권한 문제 시 기본 이미지
-                } catch (e: Exception) {
-                    Log.e("DiaryActivity", "Error setting image URI: ${e.message}")
-                    todayimage.setImageResource(R.drawable.logo)
+                // URI를 통해 이미지 입력 스트림 열기
+                contentResolver.openInputStream(imageUri)?.use { inputStream ->
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    todayimage.setImageBitmap(bitmap)
+                } ?: run {
+                    Log.e("DiaryActivity", "Input stream for image URI is null")
+                    todayimage.setImageResource(R.drawable.logo) // 입력 스트림이 null인 경우 기본 이미지 설정
                 }
+            } catch (e: SecurityException) {
+                Log.e("DiaryActivity", "SecurityException: ${e.message}")
+                todayimage.setImageResource(R.drawable.logo) // 권한 문제 발생 시 기본 이미지 설정
+            } catch (e: Exception) {
+                Log.e("DiaryActivity", "Error setting image URI: ${e.message}")
+                todayimage.setImageResource(R.drawable.logo) // 기타 예외 발생 시 기본 이미지 설정
+            }
 
         } else {
-            todayimage.setImageResource(R.drawable.logo) // 이미지가 없을 경우 기본 이미지 사용
+            todayimage.setImageResource(R.drawable.logo) // 이미지가 없을 경우 기본 이미지 설정
         }
 
         tomainbtn.setOnClickListener {
