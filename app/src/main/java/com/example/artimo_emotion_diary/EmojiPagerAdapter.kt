@@ -8,7 +8,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 
-class EmojiPagerAdapter(private val context: Context, private val imageList: List<String>) :
+class EmojiPagerAdapter(
+    private val context: Context,
+    private val imageList: List<String>,
+    private val year: Int,
+    private val month: Int,
+    private val day: Int
+) :
     RecyclerView.Adapter<EmojiPagerAdapter.ImageViewHolder>() {
 
     private val imagesPerPage = 20 // 4열 * 5행
@@ -23,7 +29,7 @@ class EmojiPagerAdapter(private val context: Context, private val imageList: Lis
         val pageImages = pages[position]
         Log.d("EmojiPagerAdapter", "Page $position: $pageImages")
         holder.recyclerView.layoutManager = GridLayoutManager(context, 4) // 4열 설정
-        holder.recyclerView.adapter = EmojiAdapter(context, pageImages)
+        holder.recyclerView.adapter = EmojiAdapter(context, pageImages, year, month, day)
     }
 
     override fun getItemCount(): Int {

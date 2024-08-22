@@ -1,5 +1,6 @@
 package com.example.artimo_emotion_diary
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.drawable.Drawable
@@ -14,8 +15,13 @@ import java.io.IOException
 import android.content.Intent
 
 
-class EmojiAdapter(private val context: Context, private val imageList: List<String>) :
-    RecyclerView.Adapter<EmojiAdapter.ImageViewHolder>() {
+class EmojiAdapter(
+    private val context: Context,
+    private val imageList: List<String>,
+    private val year: Int,
+    private val month: Int,
+    private val day: Int
+) : RecyclerView.Adapter<EmojiAdapter.ImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_emoji, parent, false)
@@ -24,6 +30,8 @@ class EmojiAdapter(private val context: Context, private val imageList: List<Str
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageFileName = imageList[position]
+
+        Log.d("EmojiAdapter", "$year, $month, $day")
 
         try {
             // 이미지 파일을 AssetManager를 사용하여 읽어옴
@@ -35,12 +43,17 @@ class EmojiAdapter(private val context: Context, private val imageList: List<Str
 
             // 이미지를 클릭할 때의 동작 설정
             holder.imageView.setOnClickListener {
-                val intent = Intent(context, WriteActivity::class.java)
-
-                // 이미지 파일 이름을 전달
-                intent.putExtra("emoji", imageFileName)
-
+                val intent = Intent(context, WriteActivity::class.java).apply {
+                    putExtra("emoji", imageFileName)
+                    putExtra("YEAR", year)
+                    putExtra("MONTH", month)
+                    putExtra("DAY", day)
+                }
                 context.startActivity(intent)
+                // 현재 Activity 종료
+                if (context is Activity) {
+                    (context as Activity).finish()
+                }
             }
 
         } catch (e: IOException) {
