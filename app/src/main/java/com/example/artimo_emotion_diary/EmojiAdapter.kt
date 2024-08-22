@@ -53,6 +53,8 @@ class EmojiAdapter(
                 // 현재 Activity 종료
                 if (context is Activity) {
                     (context as Activity).finish()
+                    (context as Activity).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
                 }
             }
 
