@@ -17,15 +17,18 @@ class EmojiSelectActivity : AppCompatActivity() {
     private lateinit var emojiPagerAdapter: EmojiPagerAdapter
     private var emojiList = mutableListOf<String>()
 
+    private var year: Int = 0
+    private var month: Int = 0
+    private var day: Int = 0
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_emojiselect)
 
-        // 전달받은 날짜
-        val year = intent.getIntExtra("YEAR", 0)
-        val month = intent.getIntExtra("MONTH", 0)
-        val day = intent.getIntExtra("DAY", 0)
+        year = intent.getIntExtra("YEAR", 0)
+        month = intent.getIntExtra("MONTH", 0)
+        day = intent.getIntExtra("DAY", 0)
 
         // 날짜 설정
         val date: TextView = findViewById(R.id.date)
@@ -49,7 +52,7 @@ class EmojiSelectActivity : AppCompatActivity() {
         }
 
         // 어댑터 설정
-        emojiPagerAdapter = EmojiPagerAdapter(this, emojiList)
+        emojiPagerAdapter = EmojiPagerAdapter(this, emojiList, year, month, day)
         Log.d("EmojiSelectActivity", "$emojiList")
         viewPager.adapter = emojiPagerAdapter
     }
