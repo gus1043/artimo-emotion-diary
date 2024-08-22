@@ -1,6 +1,8 @@
 package com.example.artimo_emotion_diary
 
-class Date(day: String, date: String){
-    var day: String = day // 요일
-    var date: String = date // 날짜
-}
+data class Date(
+    val year: Int,
+    val month:Int,
+    val date: Int,
+    val emoji: String? = null
+)
