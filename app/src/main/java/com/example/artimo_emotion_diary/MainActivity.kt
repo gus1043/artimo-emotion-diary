@@ -1,6 +1,8 @@
 package com.example.artimo_emotion_diary
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +27,12 @@ class MainActivity : AppCompatActivity() {
     private val itemList = arrayListOf<Date>()
     private val listAdapter = CalendarAdapter(itemList, object : CalendarAdapter.OnItemClickListener {
         override fun onItemClick(date: Date) {
-            // Handle item click here
+            val intent = Intent(this@MainActivity, EmojiSelectActivity::class.java).apply {
+                putExtra("YEAR", LocalDate.now().year)
+                putExtra("MONTH", LocalDate.now().monthValue)
+                putExtra("DAY", date.date.toInt())
+            }
+            startActivity(intent)
         }
     })
 
@@ -36,12 +43,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Set up header row with day names
+        val date: TextView = findViewById(R.id.month_year_tv)
+        val year = LocalDate.now().year
+        val month = LocalDate.now().monthValue
+        date.text = getString(R.string.date_format_main, year, month)
+
+        // 요일 이름을 헤더로 설정
         headerRow = findViewById(R.id.header_row)
         headerRow.layoutManager = GridLayoutManager(this, 7)
         headerRow.adapter = WeekAdapter(dayNames)
 
-        // Set up calendar grid
+        // 날짜 들어가는 캘린더
         calendarList = findViewById(R.id.calendar_list)
         val gridLayoutManager = GridLayoutManager(this, 7)
         calendarList.layoutManager = gridLayoutManager
@@ -61,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             itemList.add(Date("", ""))
         }
 
-        // Add actual dates of the month
+        // 실제 연도, 달, 일 전달
         for (i in 1..dayOfMonthCount) {
             val date = LocalDate.of(LocalDate.now().year, LocalDate.now().month, i)
             val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)
