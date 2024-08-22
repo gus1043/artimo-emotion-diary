@@ -81,7 +81,8 @@
                 android:minLines="4"
                 android:gravity="top"
                 android:scrollbars="vertical"
-                android:maxLines="4"/>
+                android:maxLines="4"
+                android:layout_marginBottom="5dp"/>
 
             <ImageView
                 android:id="@+id/todayimage"

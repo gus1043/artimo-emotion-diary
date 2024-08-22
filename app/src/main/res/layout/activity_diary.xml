@@ -76,6 +76,7 @@
             android:textSize="@dimen/text_size_medium"
             android:scrollbars="vertical"
             android:maxLines="6"
+            android:layout_marginBottom="5dp"
             android:hint="다이어리 내용"/>
 
         <ImageView
