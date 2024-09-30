@@ -66,12 +66,16 @@ class WriteActivity : AppCompatActivity() {
         val month = intent.getIntExtra("MONTH", 0)
         val day = intent.getIntExtra("DAY", 0)
         val emoji = intent.getStringExtra("emoji") ?: ""
+        val titleText = intent.getStringExtra("title") ?: ""
 
         // 날짜, 이모지 설정
         val date: TextView = findViewById(R.id.date)
         date.text = getString(R.string.date_format_emoji, year, month, day)
 
         loadEmoji(emoji)
+
+        val title: TextView = findViewById(R.id.title)
+        title.text = titleText
 
         // 이미지 선택 버튼
         todayimage.setOnClickListener {
