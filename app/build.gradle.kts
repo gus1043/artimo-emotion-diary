@@ -5,14 +5,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.artimo_emotion_diary"
+    namespace = "com.artmo.artimo_emotion_diary"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.artimo_emotion_diary"
+        applicationId = "com.artmo.artimo_emotion_diary"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
+        versionCode = 5
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import android.content.Context
 import android.view.LayoutInflater

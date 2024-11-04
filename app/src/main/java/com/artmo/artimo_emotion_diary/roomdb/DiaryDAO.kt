@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary.roomdb
+package com.artmo.artimo_emotion_diary.roomdb
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

@@ -1,8 +1,7 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -15,11 +14,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.artimo_emotion_diary.roomdb.DiaryDaoDatabase
-import com.example.artimo_emotion_diary.roomdb.DiaryTable
+import com.artmo.artimo_emotion_diary.roomdb.DiaryDaoDatabase
+import com.artmo.artimo_emotion_diary.roomdb.DiaryTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

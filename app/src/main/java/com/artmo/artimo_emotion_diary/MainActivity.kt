@@ -1,8 +1,9 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {

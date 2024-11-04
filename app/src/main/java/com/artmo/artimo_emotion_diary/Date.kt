@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 data class Date(
     val year: Int,

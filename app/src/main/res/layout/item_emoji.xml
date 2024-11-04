@@ -11,7 +11,7 @@
     tools:ignore="SpeakableTextPresentCheck">
 
 
-<ImageView
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="55sp"
         android:layout_height="55sp" />

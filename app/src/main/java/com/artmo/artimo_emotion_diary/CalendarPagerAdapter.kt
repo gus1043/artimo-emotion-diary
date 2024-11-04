@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

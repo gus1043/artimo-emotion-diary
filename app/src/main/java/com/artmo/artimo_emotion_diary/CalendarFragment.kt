@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.artimo_emotion_diary.roomdb.DiaryDAO
-import com.example.artimo_emotion_diary.roomdb.DiaryDaoDatabase
+import com.artmo.artimo_emotion_diary.roomdb.DiaryDAO
+import com.artmo.artimo_emotion_diary.roomdb.DiaryDaoDatabase
+
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
