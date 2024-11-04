@@ -78,15 +78,27 @@
             android:scrollbars="vertical"
             android:maxLines="6"
             android:layout_marginBottom="5dp"
-            android:hint="다이어리 내용"/>
+            android:hint="다이어리 내용이 입력되지 않았습니다."/>
 
-        <ImageView
-            android:id="@+id/todayimage"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:background="@drawable/imagebtn"/>
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/todayimage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@drawable/imagebtn" />
+
+            <TextView
+                android:id="@+id/noImageText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="등록된 이미지가 없습니다."
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/todaycaption"

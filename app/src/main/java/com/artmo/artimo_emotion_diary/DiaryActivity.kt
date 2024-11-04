@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -7,11 +7,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.io.File
 
 class DiaryActivity : AppCompatActivity() {
 
@@ -19,6 +19,7 @@ class DiaryActivity : AppCompatActivity() {
     private lateinit var todayemoji: ImageView
     private lateinit var todaydiary: TextView
     private lateinit var todaycaption: TextView
+    private lateinit var noImageText: TextView
     private lateinit var tomainbtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class DiaryActivity : AppCompatActivity() {
         todaydiary = findViewById(R.id.todaydiary)
         todaycaption = findViewById(R.id.todaycaption)
         tomainbtn = findViewById(R.id.tomainbtn)
+        noImageText = findViewById(R.id.noImageText)
 
         val year = intent.getIntExtra("YEAR", 0)
         val month = intent.getIntExtra("MONTH", 0)
@@ -105,28 +107,26 @@ class DiaryActivity : AppCompatActivity() {
         if (imageUriString.isNotEmpty()) {
             val imageUri = Uri.parse(imageUriString)
             try {
-                // URI 권한을 퍼미션으로 설정
                 val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 contentResolver.takePersistableUriPermission(imageUri, takeFlags)
 
-                // URI를 통해 이미지 입력 스트림 열기
                 contentResolver.openInputStream(imageUri)?.use { inputStream ->
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     todayimage.setImageBitmap(bitmap)
+                    noImageText.visibility = View.GONE // 이미지가 있으면 텍스트를 숨김
                 } ?: run {
                     Log.e("DiaryActivity", "Input stream for image URI is null")
-                    todayimage.setImageResource(R.drawable.logo) // 입력 스트림이 null인 경우 기본 이미지 설정
+                    todayimage.visibility = View.GONE
+                    noImageText.visibility = View.VISIBLE // 기본 이미지로 설정하고 텍스트를 표시
                 }
-            } catch (e: SecurityException) {
-                Log.e("DiaryActivity", "SecurityException: ${e.message}")
-                todayimage.setImageResource(R.drawable.logo) // 권한 문제 발생 시 기본 이미지 설정
             } catch (e: Exception) {
-                Log.e("DiaryActivity", "Error setting image URI: ${e.message}")
-                todayimage.setImageResource(R.drawable.logo) // 기타 예외 발생 시 기본 이미지 설정
+                e.printStackTrace()
+                todayimage.visibility = View.GONE
+                noImageText.visibility = View.VISIBLE // 오류가 발생하면 텍스트를 표시
             }
-
         } else {
-            todayimage.setImageResource(R.drawable.logo) // 이미지가 없을 경우 기본 이미지 설정
+            todayimage.visibility = View.GONE
+            noImageText.visibility = View.VISIBLE // URI가 없으면 텍스트를 표시
         }
 
         tomainbtn.setOnClickListener {

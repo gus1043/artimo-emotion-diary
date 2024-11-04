@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

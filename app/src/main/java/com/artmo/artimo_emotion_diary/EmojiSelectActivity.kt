@@ -1,4 +1,4 @@
-package com.example.artimo_emotion_diary
+package com.artmo.artimo_emotion_diary
 
 import android.annotation.SuppressLint
 import android.content.res.AssetManager
@@ -7,8 +7,6 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.artimo_emotion_diary.EmojiPagerAdapter
-import com.example.artimo_emotion_diary.R
 import java.io.IOException
 
 class EmojiSelectActivity : AppCompatActivity() {
